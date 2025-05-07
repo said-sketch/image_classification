@@ -4,14 +4,18 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.applications.efficientnet import preprocess_input
 
 # Load the trained model
-model = load_model("emotion_model.h5")
+model = load_model("emotion_model_finetuned.keras")
 
 # Class names must match training order
 class_names = ['happy', 'sad']  # adjust if needed
-img = r'C:\Users\HP\Downloads\EmotionsClassifier\test_img\saaad.jpg'
+
 def predict_image(image_path):
-    # Load and preprocess image
+
     img = cv2.imread(image_path)
+    if img is None:
+        print(f"Error: Could not read image from {image_path}")
+        return
+    # Load and preprocess image
     img = cv2.resize(img, (260, 260))  # Resize to match model input
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
     img = preprocess_input(img)  # Important if you used EfficientNet preprocessing
@@ -23,4 +27,5 @@ def predict_image(image_path):
     print(f"Prediction: {class_names[class_index]} (Confidence: {np.max(preds)*100:.2f}%)")
 
 # Example usage
+img = r'C:\Users\HP\Downloads\EmotionsClassifier\test_img\saaad.jpg'
 predict_image(img)  # Replace with your image path
